@@ -7,12 +7,7 @@ const httpGetAllLunches = (req, res) => {
 const httpAddNewLunch = (req, res) => {
   const lunch = req.body;
 
-  if (
-    !lunch.mission ||
-    !lunch.lunchDate ||
-    !lunch.rocket ||
-    !lunch.destination
-  ) {
+  if (!lunch.mission || !lunch.lunchDate || !lunch.rocket || !lunch.target) {
     console.log("Erro : ===> Missing required lunch property");
     return res.status(400).json({ error: "Missing required lunch property" });
   }
