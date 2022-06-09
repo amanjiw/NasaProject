@@ -1,4 +1,5 @@
 const lunches = new Map();
+let latestFlightNumber = 100;
 
 const lunch = {
   flightNumber: 100,
@@ -13,6 +14,25 @@ const lunch = {
 
 lunches.set(lunch.flightNumber, lunch);
 
+const getAllLunches = () => {
+  return Array.from(lunches.values());
+};
+
+const addNewLunch = (lunch) => {
+  latestFlightNumber++;
+
+  lunches.set(
+    latestFlightNumber,
+    Object.assign(lunch, {
+      flightNumber: latestFlightNumber,
+      customer: ["AMANJ", "NASA"],
+      upcoming: true,
+      success: true,
+    })
+  );
+};
+
 module.exports = {
-  lunches,
+  getAllLunches,
+  addNewLunch,
 };

@@ -1,9 +1,10 @@
 const express = require("express");
 
-const { getAllLunches } = require("./lunches.controller");
+const { httpGetAllLunches, httpAddNewLunch } = require("./lunches.controller");
 
 const lunchesRouter = express.Router();
 
-lunchesRouter.get("/lunches", getAllLunches);
+lunchesRouter.get("/", httpGetAllLunches);
+lunchesRouter.post("/", httpAddNewLunch);
 
 module.exports = lunchesRouter;
