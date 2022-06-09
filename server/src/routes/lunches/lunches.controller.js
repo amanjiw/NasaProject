@@ -6,7 +6,24 @@ const httpGetAllLunches = (req, res) => {
 
 const httpAddNewLunch = (req, res) => {
   const lunch = req.body;
+
+  if (
+    !lunch.mission ||
+    !lunch.lunchDate ||
+    !lunch.rocket ||
+    !lunch.destination
+  ) {
+    console.log("Erro : ===> Missing required lunch property");
+    return res.status(400).json({ error: "Missing required lunch property" });
+  }
+
   lunch.lunchDate = new Date(lunch.lunchDate);
+
+  if (isNaN(lunch.lunchDate)) {
+    console.log("Error==> : Invalid Lunch Date");
+    return res.status(400).json({ error: "Invalid Lunch Date" });
+  }
+
   addNewLunch(lunch);
 
   res.status(201).json(lunch);
