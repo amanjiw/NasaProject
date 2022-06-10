@@ -14,6 +14,10 @@ const lunch = {
 
 lunches.set(lunch.flightNumber, lunch);
 
+const existsLaunchWithId = (id) => {
+  return lunches.has(id);
+};
+
 const getAllLunches = () => {
   return Array.from(lunches.values());
 };
@@ -32,7 +36,18 @@ const addNewLunch = (lunch) => {
   );
 };
 
+const abortLaunchById = (id) => {
+  const aborted = lunches.get(id);
+
+  aborted.upcoming = false;
+  aborted.success = false;
+
+  return aborted;
+};
+
 module.exports = {
+  existsLaunchWithId,
+  abortLaunchById,
   getAllLunches,
   addNewLunch,
 };
