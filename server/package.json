@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "watch": "nodemon src/server.js",
-    "start": "PORT=5000 node src/server.js"
+    "start": "PORT=5000 node src/server.js",
+    "cluster": "pm2 start src/server.js -i max"
   },
   "keywords": [],
   "author": "",
@@ -17,7 +18,8 @@
     "csv": "^6.1.0",
     "express": "^4.18.1",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.16"
+    "nodemon": "^2.0.16",
+    "pm2": "^5.2.0"
   },
   "devDependencies": {
     "jest": "^28.1.1",
