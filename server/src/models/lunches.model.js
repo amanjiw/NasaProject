@@ -1,3 +1,5 @@
+const launches = require("./lunches.mongo");
+
 const lunches = new Map();
 let latestFlightNumber = 100;
 
