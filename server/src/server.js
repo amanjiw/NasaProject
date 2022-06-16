@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 8000;
 const MONGO_URL =
   "mongodb+srv://amanji:amanj8917@cluster0.iz5yo.mongodb.net/?retryWrites=true&w=majority";
 
-const MONGO_URL_2 = "mongodb://envy:27017";
+const MONGO_URL_2 = "mongodb://envy:27017/nasa";
 
 const server = http.createServer(app);
 
