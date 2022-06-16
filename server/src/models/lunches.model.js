@@ -2,21 +2,21 @@ const lunchesData = require("./lunches.mongo");
 const planets = require("./planets.mongo");
 
 const lunches = new Map();
-let latestFlightNumber = 100;
+let DEFAULT_FLIGHT_NUMBER = 1;
 
 const lunch = {
-  flightNumber: 100,
+  flightNumber: DEFAULT_FLIGHT_NUMBER,
   mission: "kepler Exploration X",
   rocket: "Explorer IS1",
   launchDate: new Date("september 27, 2030"),
-  target: "kepler-422 b",
+  target: "Kepler-1410 b",
   customers: ["ZTM", "NASA"],
   upcoming: true,
   success: true,
 };
 
 const saveLunches = async (lunch) => {
-  const planet = planets.findOne({ keplerName: lunch.target });
+  const planet = await  planets.findOne({ keplerName: lunch.target });
 
   if (!planet) throw new Error("Not matching planet found");
 
@@ -26,6 +26,33 @@ const saveLunches = async (lunch) => {
     });
   } catch (err) {
     console.log(err);
+    throw new Error(err)
+  }
+};
+
+const getLatestFlightNumber = async () => {
+  const latestLunch = await lunchesData.findOne().sort("-flightNumber");
+
+  if (!latestLunch) return DEFAULT_FLIGHT_NUMBER;
+
+  return latestLunch.flightNumber;
+};
+
+const scheduleNewLunch = async (lunch) => {
+  try {
+    const newFlightNumber = (await getLatestFlightNumber()) + 1;
+
+    const newLunch = Object.assign(lunch, {
+      // success: true,
+      upcoming: true,
+      customers: ["Ghaderi.co", "NASSA"],
+      flightNumber: newFlightNumber,
+    });
+
+    await saveLunches(newLunch);
+  } catch (err) {
+    console.log("THIS IS YOUR ERROR : " + err);
+    throw new Error(err)
   }
 };
 
@@ -38,20 +65,6 @@ const existsLaunchWithId = (id) => {
 
 const getAllLunches = async () => {
   return await lunchesData.find({}, { _id: 0, __v: 0 });
-};
-
-const addNewLunch = (lunch) => {
-  latestFlightNumber++;
-
-  lunches.set(
-    latestFlightNumber,
-    Object.assign(lunch, {
-      flightNumber: latestFlightNumber,
-      customer: ["AMANJ", "NASA"],
-      upcoming: true,
-      success: true,
-    })
-  );
 };
 
 const abortLaunchById = (id) => {
@@ -67,5 +80,5 @@ module.exports = {
   existsLaunchWithId,
   abortLaunchById,
   getAllLunches,
-  addNewLunch,
+  scheduleNewLunch,
 };
