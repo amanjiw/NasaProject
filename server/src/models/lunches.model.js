@@ -1,5 +1,5 @@
-const launches = require("./lunches.mongo");
 const lunchesData = require("./lunches.mongo");
+const planets = require("./planets.mongo");
 
 const lunches = new Map();
 let latestFlightNumber = 100;
@@ -16,6 +16,10 @@ const lunch = {
 };
 
 const saveLunches = async (lunch) => {
+  const planet = planets.findOne({ keplerName: lunch.target });
+
+  if (!planet) throw new Error("Not matching planet found");
+
   try {
     await lunchesData.updateOne({ flightNumber: lunch.flightNumber }, lunch, {
       upsert: true,
