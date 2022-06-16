@@ -1,4 +1,5 @@
 const launches = require("./lunches.mongo");
+const lunchesData = require("./lunches.mongo");
 
 const lunches = new Map();
 let latestFlightNumber = 100;
@@ -9,19 +10,30 @@ const lunch = {
   rocket: "Explorer IS1",
   launchDate: new Date("september 27, 2030"),
   target: "kepler-422 b",
-  customer: ["ZTM", "NASA"],
+  customers: ["ZTM", "NASA"],
   upcoming: true,
   success: true,
 };
 
-lunches.set(lunch.flightNumber, lunch);
+const saveLunches = async (lunch) => {
+  try {
+    await lunchesData.updateOne({ flightNumber: lunch.flightNumber }, lunch, {
+      upsert: true,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+saveLunches(lunch);
+// lunches.set(lunch.flightNumber, lunch);
 
 const existsLaunchWithId = (id) => {
   return lunches.has(id);
 };
 
-const getAllLunches = () => {
-  return Array.from(lunches.values());
+const getAllLunches = async () => {
+  return await lunchesData.find({}, { _id: 0, __v: 0 });
 };
 
 const addNewLunch = (lunch) => {

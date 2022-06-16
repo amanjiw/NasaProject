@@ -5,13 +5,13 @@ const {
   addNewLunch,
 } = require("../../models/lunches.model");
 
-const httpGetAllLunches = (req, res) => {
-  return res.status(200).json(getAllLunches());
+const httpGetAllLunches = async (req, res) => {
+  return res.status(200).json(await getAllLunches());
 };
 
 const httpAddNewLunch = (req, res) => {
   const lunch = req.body;
-  console.log(lunch)
+  console.log(lunch);
 
   if (!lunch.mission || !lunch.launchDate || !lunch.rocket || !lunch.target) {
     console.log("Erro : ===> Missing required lunch property");
@@ -38,7 +38,7 @@ const httpAbortLaunch = (req, res) => {
   }
 
   const aborted = abortLaunchById(launchId);
- 
+
   res.status(200).json(aborted);
 };
 
