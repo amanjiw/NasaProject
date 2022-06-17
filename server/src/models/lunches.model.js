@@ -16,7 +16,7 @@ const lunch = {
 };
 
 const saveLunches = async (lunch) => {
-  const planet = await  planets.findOne({ keplerName: lunch.target });
+  const planet = await planets.findOne({ keplerName: lunch.target });
 
   if (!planet) throw new Error("Not matching planet found");
 
@@ -26,7 +26,7 @@ const saveLunches = async (lunch) => {
     });
   } catch (err) {
     console.log(err);
-    throw new Error(err)
+    throw new Error(err);
   }
 };
 
@@ -52,28 +52,31 @@ const scheduleNewLunch = async (lunch) => {
     await saveLunches(newLunch);
   } catch (err) {
     console.log("THIS IS YOUR ERROR : " + err);
-    throw new Error(err)
+    throw new Error(err);
   }
 };
 
 saveLunches(lunch);
 // lunches.set(lunch.flightNumber, lunch);
 
-const existsLaunchWithId = (id) => {
-  return lunches.has(id);
+const existsLaunchWithId = async (id) => {
+  return await lunchesData.findOne({ flightNumber: id });
 };
 
 const getAllLunches = async () => {
   return await lunchesData.find({}, { _id: 0, __v: 0 });
 };
 
-const abortLaunchById = (id) => {
-  const aborted = lunches.get(id);
+const abortLaunchById = async (id) => {
+  const aborted = await lunchesData.updateOne(
+    { flightNumber: id },
+    {
+      upcoming: false,
+      success: false,
+    }
+  );
 
-  aborted.upcoming = false;
-  aborted.success = false;
-
-  return aborted;
+  return aborted.ok === 1 && aborted.nModified === 1;
 };
 
 module.exports = {
