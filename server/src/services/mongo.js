@@ -17,6 +17,11 @@ const mongoConnect = async () => {
   await mongoose.connect(MONGO_URL_2);
 };
 
+const mongoDisConnent = async () => {
+  await mongoose.disconnect();
+};
+
 module.exports = {
   mongoConnect,
+  mongoDisConnent,
 };

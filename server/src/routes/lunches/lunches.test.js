@@ -1,10 +1,14 @@
 const request = require("supertest");
 const app = require("../../app");
-const { mongoConnect } = require("../../services/mongo");
+const { mongoConnect, mongoDisConnent } = require("../../services/mongo");
 
 describe("Luanches API ", () => {
   beforeAll(async () => {
     await mongoConnect();
+  });
+
+  afterAll(async () => {
+    await mongoDisConnent();
   });
 
   describe("Test GET /lunches", () => {
@@ -17,21 +21,21 @@ describe("Luanches API ", () => {
     const completeLunchData = {
       mission: "USS EN7",
       rocket: "NCC JT4-N",
-      target: "Sardasht 4n67B",
+      target: "Kepler-1652 b",
       launchDate: "January 4, 2028",
     };
 
     const completeLunchDataWithINvalidDate = {
       mission: "USS EN7",
       rocket: "NCC JT4-N",
-      target: "Sardasht 4n67B",
+      target: "Kepler-1652 b",
       launchDate: "amanj",
     };
 
     const lunchDataWithoutDate = {
       mission: "USS EN7",
       rocket: "NCC JT4-N",
-      target: "Sardasht 4n67B",
+      target: "Kepler-1652 b",
     };
 
     // testing success responsd
