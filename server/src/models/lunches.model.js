@@ -1,18 +1,22 @@
 const lunchesData = require("./lunches.mongo");
 const planets = require("./planets.mongo");
 
+const axios = require("axios");
+
+const X_API_URL = "https://api.spacexdata.com/v4/launches/query";
+
 const lunches = new Map();
 let DEFAULT_FLIGHT_NUMBER = 1;
 
 const lunch = {
-  flightNumber: DEFAULT_FLIGHT_NUMBER,
-  mission: "kepler Exploration X",
-  rocket: "Explorer IS1",
-  launchDate: new Date("september 27, 2030"),
-  target: "Kepler-1410 b",
+  flightNumber: DEFAULT_FLIGHT_NUMBER, //flight_number
+  mission: "kepler Exploration X", //name
+  rocket: "Explorer IS1", // rocket.name
+  launchDate: new Date("september 27, 2030"), //date_local
+  target: "Kepler-1410 b", // not applicable
   customers: ["ZTM", "NASA"],
-  upcoming: true,
-  success: true,
+  upcoming: true, //upcoming
+  success: true, //success
 };
 
 const saveLunches = async (lunch) => {
@@ -79,9 +83,32 @@ const abortLaunchById = async (id) => {
   return aborted.ok === 1 && aborted.nModified === 1;
 };
 
+const loadLaunchesData = async () => {
+  const response = await axios.post(X_API_URL, {
+    query: {},
+    options: {
+      populate: [
+        {
+          path: "rocket",
+          select: {
+            name: 1,
+          },
+        },
+        {
+          path: "payloads",
+          select: {
+            customers: 1,
+          },
+        },
+      ],
+    },
+  });
+};
+
 module.exports = {
   existsLaunchWithId,
   abortLaunchById,
   getAllLunches,
   scheduleNewLunch,
+  loadLaunchesData,
 };
