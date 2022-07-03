@@ -87,6 +87,7 @@ const loadLaunchesData = async () => {
   const response = await axios.post(X_API_URL, {
     query: {},
     options: {
+      pagination: false,
       populate: [
         {
           path: "rocket",
@@ -121,6 +122,7 @@ const loadLaunchesData = async () => {
       success: launchDoc["success"],
       customers,
     };
+    console.log(launch.flightNumber);
   }
 };
 
