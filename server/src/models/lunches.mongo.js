@@ -5,7 +5,7 @@ const lunchesSchema = new mongoose.Schema({
   launchesDate: { type: Date, required: true },
   mission: { type: String, required: true },
   customers: [String],
-  target: { type: String, required: true },
+  target: { type: String },
   upcoming: { type: Boolean, required: true },
   success: { type: Boolean, required: true },
 });

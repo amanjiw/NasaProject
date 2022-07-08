@@ -20,10 +20,6 @@ const lunch = {
 };
 
 const saveLunches = async (lunch) => {
-  const planet = await planets.findOne({ keplerName: lunch.target });
-
-  if (!planet) throw new Error("Not matching planet found");
-
   try {
     await lunchesData.updateOne({ flightNumber: lunch.flightNumber }, lunch, {
       upsert: true,
@@ -43,6 +39,9 @@ const getLatestFlightNumber = async () => {
 };
 
 const scheduleNewLunch = async (lunch) => {
+  const planet = await planets.findOne({ keplerName: lunch.target });
+  if (!planet) throw new Error("Not matching planet found");
+
   try {
     const newFlightNumber = (await getLatestFlightNumber()) + 1;
 
@@ -63,12 +62,16 @@ const scheduleNewLunch = async (lunch) => {
 saveLunches(lunch);
 // lunches.set(lunch.flightNumber, lunch);
 
-const existsLaunchWithId = async (id) => {
-  return await lunchesData.findOne({ flightNumber: id });
+const findLaunch = async (filter) => {
+  return await lunchesData.findOne(filter);
 };
 
-const getAllLunches = async () => {
-  return await lunchesData.find({}, { _id: 0, __v: 0 });
+const existsLaunchWithId = async (id) => {
+  return await findLaunch({ flightNumber: id });
+};
+
+const getAllLunches = async (skip, limit) => {
+  return await lunchesData.find({}, { _id: 0, __v: 0 }).skip(skip).limit(limit);
 };
 
 const abortLaunchById = async (id) => {
@@ -83,7 +86,7 @@ const abortLaunchById = async (id) => {
   return aborted.ok === 1 && aborted.nModified === 1;
 };
 
-const loadLaunchesData = async () => {
+const populateLaunches = async () => {
   const response = await axios.post(X_API_URL, {
     query: {},
     options: {
@@ -123,6 +126,22 @@ const loadLaunchesData = async () => {
       customers,
     };
     console.log(launch.flightNumber);
+
+    await saveLunches(launch);
+  }
+};
+
+const loadLaunchesData = async () => {
+  const firtstLaunch = await findLaunch({
+    flightNumber: 1,
+    rocket: "Falcon 1",
+    mission: "FalconSat",
+  });
+
+  if (firtstLaunch) {
+    console.log("Launch data already loaded");
+  } else {
+    await populateLaunches();
   }
 };
 

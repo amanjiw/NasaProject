@@ -5,8 +5,12 @@ const {
   scheduleNewLunch,
 } = require("../../models/lunches.model");
 
+const { getPagination } = require("../../services/query");
+
 const httpGetAllLunches = async (req, res) => {
-  return res.status(200).json(await getAllLunches());
+  const { skip, limit } = getPagination(req.query);
+
+  return res.status(200).json(await getAllLunches(skip, limit));
 };
 
 const httpAddNewLunch = async (req, res) => {
