@@ -71,7 +71,11 @@ const existsLaunchWithId = async (id) => {
 };
 
 const getAllLunches = async (skip, limit) => {
-  return await lunchesData.find({}, { _id: 0, __v: 0 }).skip(skip).limit(limit);
+  return await lunchesData
+    .find({}, { _id: 0, __v: 0 })
+    .sort({ flightNumber: 1 })
+    .skip(skip)
+    .limit(limit);
 };
 
 const abortLaunchById = async (id) => {
